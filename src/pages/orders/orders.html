@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-navbar color="dark">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    
+    <ion-buttons end>
+      <img alt="logo" style="float: right;" height="25" src="assets/imgs/logoTr.png">
+    </ion-buttons>
+  </ion-navbar>
+  <!-- <ion-toolbar>
+    <ion-title> 
+     <b>
+       {{'PAGES.Orders' | translate }}
+     </b>
+    </ion-title>
+  </ion-toolbar> -->
+</ion-header>
+
+<ion-content>
+  <ion-row>
+    <ion-col no-padding>
+      <p style=" margin-left:4px;">
+        <b>
+          {{'PAGES.Orders' | translate }}
+        </b>
+      </p>
+    
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label floating >{{'PAGES.From' | translate }}</ion-label>
+        <ion-datetime display-format="DD.MMM.YYYY" min="2019" [max]="today" [(ngModel)]="fromDate"></ion-datetime>
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-item>
+        <ion-label floating>{{'PAGES.To' | translate }}</ion-label>
+        <ion-datetime display-format="DD.MMM.YYYY" min="2019" [max]="today" [(ngModel)]="uptoDate"></ion-datetime>
+      </ion-item>
+    </ion-col>
+    <ion-col >
+      <ion-label></ion-label>
+      <button [disabled]="loading" ion-button type="button" (click)="getOrders()">
+        <ion-icon slot="end" name="search"></ion-icon>
+      </button>
+    </ion-col>
+    <ion-col >
+      <ion-label></ion-label>
+      <button [disabled]="loading" ion-button type="button" (click)="getPDF()">
+        <ion-icon ios="ios-share" md="md-share" ></ion-icon>
+      </button>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="12">
+      <ion-spinner *ngIf="loading" name="bubbles"></ion-spinner>
+    </ion-col>
+  </ion-row>
+  <div  #pdfEl>
+  <table *ngIf="!loading" style="width:100%;margin-bottom: 20%; border : 1px solid black">
+    <tr style="border : 1px solid black">
+      <th>{{'PAGES.Number' | translate }}</th>
+      <th>{{'PAGES.Date' | translate }}</th>
+      <th>{{'PAGES.Amount' | translate }}</th>
+      <!-- <th></th> -->
+    </tr>
+    <tr *ngFor="let o of orders" (click)="showStatus(o.ORDER_ID)">
+      <td style=" border-bottom: 1px solid black;">{{o.ORDER_NO}}</td>
+      <td style="text-align: center; border-bottom: 1px solid black;">{{o.ORDER_DT}}</td>
+      <td style="text-align: right;border-bottom: 1px solid black;">{{o.AMOUNT | number : '1.2-2'}}</td>
+      <!-- <td> <ion-icon ios="ios-share" md="md-share" ></ion-icon></td> -->
+    </tr>
+  </table>
+</div>
+</ion-content>

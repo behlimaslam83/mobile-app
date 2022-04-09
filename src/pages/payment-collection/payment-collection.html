@@ -1,0 +1,87 @@
+<ion-header>
+  <ion-navbar color="dark">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-buttons end>
+      <img alt="logo" style="float: right;" height="25" src="assets/imgs/logoTr.png">
+    </ion-buttons>
+  </ion-navbar>
+  
+</ion-header>
+
+<ion-content padding>
+  <ion-row style="margin: auto;text-align: center;" >
+    <ion-col>
+      <ion-item>
+        <ion-label floating >Date</ion-label>
+        <ion-datetime display-format="DD.MMM.YYYY" [min]="minDate" max="2030" [(ngModel)]="collectionDate"></ion-datetime>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <!-- address line -->
+  <ion-row *ngIf="!allowEdit">
+      <ion-item col-10>
+      <ion-label floating>Address</ion-label>
+      <ion-textarea rows="2"disabled [(ngModel)]="address"></ion-textarea>
+      </ion-item>
+   
+      <ion-item col-2>
+      <button ion-button (click)="editAddress(true)">
+        <ion-icon name="create"></ion-icon>
+      </button> 
+      </ion-item>
+  </ion-row>
+  <!-- new address line -->
+  <ion-row *ngIf="allowEdit">
+    <ion-item col-10>
+    <ion-label floating>New Address</ion-label>
+    <ion-textarea rows="2" [(ngModel)]="newAddress"></ion-textarea>
+    </ion-item>
+
+    <ion-item col-2>
+    <button ion-button outline (click)="editAddress(false)">
+      <ion-icon name="close"></ion-icon>
+    </button> 
+    </ion-item>
+</ion-row>
+
+<ion-row *ngIf="allowEdit">
+ 
+    <ion-item col-12>
+      <ion-label>City</ion-label>
+      <ion-select [(ngModel)]="selectedCity" >
+        <ion-option *ngFor="let city of cities" [value]="city.CT_CODE" (ionSelect)="changeCity(city.CT_ST_CODE,city.CT_CODE)">{{city.CT_DESC}}</ion-option>
+      </ion-select>
+    </ion-item>
+ 
+  <ion-item col-12>
+    <ion-label>Area</ion-label>
+    <ion-select [(ngModel)]="selectedArea" (ionChange)="selectArea()">
+      <ion-option *ngFor="let area of areas" [value]="area.AR_CODE">{{area.AR_DESC}}</ion-option>
+    </ion-select>
+  </ion-item>
+</ion-row>
+<!-- Remarks -->
+  <ion-row>
+    <ion-col size="12">
+      <ion-item>
+        <ion-label floating>Remarks</ion-label>
+      <ion-textarea rows="3" [(ngModel)]="remarks"></ion-textarea>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="12">
+      <ion-spinner *ngIf="loading" name="bubbles"></ion-spinner>
+    </ion-col>
+  </ion-row>
+  <!-- allowEdit true &&  -->
+  <ion-row>
+    <button [disabled]=" (collectionDate==null) || ( allowEdit && ( (newAddress == null )|| (selectedCity == null) || (selectedArea == null) ))"
+    ion-button block (click)="cashRequest()"  color="dark" shape="round">
+     Request Payment Collection
+    </button>
+  </ion-row>
+  
+</ion-content>

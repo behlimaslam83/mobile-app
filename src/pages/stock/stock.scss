@@ -1,0 +1,48 @@
+page-stock {
+    .productsList{
+        background-color:#082358 ;
+        color: white;
+        width: 100%;
+        padding: 5px;
+        margin: 5px;
+       
+    }
+    ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: white;
+        opacity: 1; /* Firefox */
+      } 
+      .col1 {
+       
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden
+    }
+    .col1 img {
+        flex-shrink: 0;
+        max-width: 100%;
+        min-height: 100%;
+    }
+   
+}
+// In appropriate css
+.wider-popover .popover-content {
+    width: 100%; //or w/e width
+    padding: 5%;
+ }
+ion-input{
+background: #082358;
+color: rgb(255, 255, 255);
+border-radius: 5px;
+    .text-input{ 
+        padding-left: 14px;
+     }
+    }
+    .item {
+        padding-left: 0%;
+    }
+    .label[stacked] {
+        font-size: 1.4rem;
+        color: black;
+        font-weight: bold;
+    }

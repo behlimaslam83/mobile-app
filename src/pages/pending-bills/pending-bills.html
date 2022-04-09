@@ -1,0 +1,79 @@
+<ion-header>
+
+  <ion-navbar color="dark">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-buttons end>
+      <img alt="logo" style="float: right;" height="25" src="assets/imgs/logoTr.png">
+    </ion-buttons>
+  </ion-navbar>
+  <ion-toolbar>
+    <ion-row>
+      <ion-col style="margin: auto;" col-7>
+        <b>
+          {{'PAGES.Outstanding Bills' | translate }}
+        </b>
+      </ion-col>
+      <ion-col col-3>
+        <button [disabled]="invoiceData.length == 0" ion-button (click)="goToPayment()" expand="block" >
+          Pay Now
+        </button>
+      </ion-col>
+      <ion-col  style="margin: auto;" col-2>
+        <button [disabled]="loading" ion-button type="button" (click)="getPDF()">
+          <ion-icon ios="ios-share" md="md-share" ></ion-icon>
+        </button>
+      </ion-col>
+  
+  </ion-row>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <div style="height: 160%;"> 
+
+  
+  
+<div  #pdfEl>
+  <table  *ngIf="!loading" style="width:100%; margin-bottom: 20%; border : 1px solid black">
+    <tr style="border : 1px solid black">
+      <th></th>
+      <th>{{'PAGES.Date' | translate }}</th>
+      <th>{{'PAGES.Doc no' | translate }}</th>
+      <th>{{'PAGES.Amount' | translate }}</th>
+      <th>{{'PAGES.Days' | translate }}</th>
+    </tr>
+    <tr *ngFor="let pb of pendingBills">
+      <!-- <td><input type="checkbox" id="" name="" value={{pb.VOUCHER_NO}}></td> -->
+      <td style=" border-bottom: 1px solid black;"><input [ngStyle]="{'visibility':pb.VL_DC_FLAG === 'Cr' ? 'hidden' : 'block' }" class="checkbox" type="checkbox" (change)="selectInvoice(pb, $event.target.checked)"></td>
+      <td style=" border-bottom: 1px solid black;">{{pb.DATED}}</td>
+      <td style=" border-bottom: 1px solid black;" (click)="getInvoiceDetails(pb.VOUCHER_NO)">{{pb.VOUCHER_NO}}</td>
+      <td  [ngStyle]="{'color':pb.VL_DC_FLAG === 'Cr' ? 'green' : 'red' }" style="text-align: right;border-bottom: 1px solid black;">{{pb.PENDING_AMOUNT | number : '1.2-2'}}</td>
+      <td style="text-align: right; border-bottom: 1px solid black;">{{pb.PENDING_DAYS}}</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td>
+        <b>
+          Total :
+        </b>
+      </td>
+      <td style="text-align: right">
+       <b>
+         {{total | number : '1.2-2'}} {{valueLabel}}
+       </b>
+      </td>
+      <td></td>
+    </tr>
+  </table>
+</div>
+  <ion-row>
+    <ion-col size="12">
+      <ion-spinner *ngIf="loading" name="bubbles"></ion-spinner>
+    </ion-col>
+  </ion-row>
+</div>
+</ion-content>

@@ -1,0 +1,140 @@
+
+<ion-header>
+
+  <ion-navbar color="dark">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-buttons end>
+      <img alt="logo" style="float: right;" height="25" src="assets/imgs/logoTr.png">
+    </ion-buttons>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+<ion-row  *ngIf="profile != null">
+  <ion-col size="6">
+    {{profile.USER_FIRST_NAME}} 
+  </ion-col>
+  <ion-col size="6"> 
+    {{profile.USER_LAST_NAME}}
+  </ion-col>
+</ion-row>
+<hr>
+<div *ngIf="profile != null">
+  <ion-row>
+    <ion-col size="12">
+      <ion-input type="text" value="{{profile.USER_FIRST_NAME}} {{profile.USER_LAST_NAME}}" disabled></ion-input>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="12">
+      <ion-input type="text" value="{{profile.USER_EMAIL_ID}}" disabled></ion-input>
+    </ion-col>
+  </ion-row>
+  <p (click)="showPasswordForm()">
+   <b>
+     <ion-icon name="ios-lock"></ion-icon>
+     Change Password 
+     <ion-icon *ngIf="!hideForm" style="float: right;" md="arrow-dropdown"></ion-icon>
+     <ion-icon *ngIf="hideForm" style="float: right;" md="arrow-dropup"></ion-icon>
+    </b>
+  </p>
+  <form *ngIf="hideForm" [formGroup]="changePasswordForm" (submit)="resetPassword()">
+		<ion-item>
+			<ion-label stacked>
+      Your current password
+			</ion-label>
+			<ion-input formControlName="oldPassword" [disabled]="hideVerfiyButton==true" type="password"></ion-input>
+    </ion-item>
+    <ion-label *ngIf="oldPassValid==false" style="color: red">
+      Entered current password is wrong !!
+    </ion-label>
+    <button  type="button" *ngIf="!hideVerfiyButton==true"  [disabled]="!changePasswordForm.controls['oldPassword']?.valid"
+     color="primary"  ion-button small block (click)="verfiyOldPassword()">Verify current password</button>
+  
+     <div *ngIf="oldPassValid">  
+		<ion-item>
+			<ion-label stacked>
+			Your new password
+			</ion-label>
+			<ion-input formControlName="newPassword" type="password"></ion-input>
+		</ion-item>
+		<ion-item *ngIf="changePasswordForm.controls['newPassword']?.valid ">
+			<ion-label stacked>
+				Retype your new password
+			</ion-label>
+			<ion-input formControlName="confirmPassword" id="confirmPassword" type="password"></ion-input>
+    </ion-item>
+    <ion-label *ngIf="changePasswordForm.controls['confirmPassword'].errors?.MatchPassword && changePasswordForm.controls['newPassword']?.valid" style="color: red">
+      New password did not match
+    </ion-label>
+		<button *ngIf="!changingPassword" type="submit" [disabled]="!changePasswordForm.valid" color="primary" ion-button small block>Submit</button>
+		<button *ngIf="changingPassword" color="primary" disabled ion-button block>
+          <div class="center-vertical-horizontal">
+            Processing...
+            <ion-spinner class="button-spinner" name="crescent"></ion-spinner>
+          </div>
+     </button>
+    </div>
+  </form>
+  <hr>
+  <p>
+    Mobile
+  </p>
+  <ion-row>
+    <ion-col size="12">
+      <ion-input type="text" value="{{profile.CUST_BILL_MOBILE}}" disabled></ion-input>
+    </ion-col>
+  </ion-row>
+  <p>
+    Branch
+  </p>
+  <ion-row>
+    <ion-col size="12">
+      <ion-input type="text" value="{{profile.EBR_BRANCH_TITLE}}" disabled></ion-input>
+    </ion-col>
+  </ion-row>
+  <p>
+    Address
+  </p>
+  <ion-row>
+    <ion-col size="12">
+      <ion-input type="text" value="{{profile.BILL_CT_DESC}}" disabled></ion-input>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="12">
+      <ion-input type="text" value="{{profile.BILL_ST_DESC}}" disabled></ion-input>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col size="12">
+      <ion-input type="text" value="{{profile.BILL_CN_DESC}}" disabled></ion-input>
+    </ion-col>
+  </ion-row>
+  <!-- <hr>
+  <p>
+    Change Password
+  </p>
+    <ion-row>
+      <ion-col size="12">
+        <ion-input type="Password" placeholder="Old Password"></ion-input>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-input type="password" placeholder="New Password"></ion-input>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <button (click)="changePassword()" ion-button expand="block" fill="clear" shape="round">
+          Change Password
+        </button>
+      </ion-col>
+    </ion-row> -->
+</div>
+</ion-content>

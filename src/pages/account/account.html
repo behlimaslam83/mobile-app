@@ -1,0 +1,88 @@
+
+<ion-header>
+
+  <ion-navbar color="dark">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-buttons end>
+      <img alt="logo" style="float: right;" height="25" src="assets/imgs/logoTr.png">
+    </ion-buttons>
+  </ion-navbar>
+  <!-- <ion-toolbar>
+    <ion-title>
+      <b>
+      {{'PAGES.Account' | translate }}
+    </b> 
+  </ion-title>
+  </ion-toolbar> -->
+
+</ion-header>
+
+
+<ion-content>
+  <ion-row>
+    <ion-col size="12">
+      <ion-col style="margin: auto;" col-8>
+        <b>
+        Statement Of Account
+        </b>
+      </ion-col>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <ion-item>
+        <ion-label floating >{{'PAGES.From' | translate }}</ion-label>
+        <ion-datetime display-format="DD.MMM.YYYY" min="2019" [max]="today" [(ngModel)]="fromDate"></ion-datetime>
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-item>
+        <ion-label floating>{{'PAGES.To' | translate }}</ion-label>
+        <ion-datetime display-format="DD.MMM.YYYY" min="2019" [max]="today" [(ngModel)]="uptoDate"></ion-datetime>
+      </ion-item>
+    </ion-col>
+    <ion-col >      
+      <ion-label></ion-label>
+      <button [disabled]="loading" ion-button type="button" (click)="getAccountStatement()">
+        <ion-icon slot="end" name="search"></ion-icon>
+      </button>
+    </ion-col>
+    <ion-col >
+      <ion-label></ion-label>
+      <button [disabled]="loading" ion-button type="button" (click)="getPDF()">
+        <ion-icon ios="ios-share" md="md-share" ></ion-icon>
+      </button>
+    </ion-col>
+  </ion-row>
+ <div #pdfEl>
+  <table *ngIf="!loading" style="width:100%; margin-bottom: 20%; border : 1px solid black">
+    <tr style="border : 1px solid black">
+      <th>{{'PAGES.Date' | translate }}</th>
+      <th>{{'PAGES.Ref No' | translate }}</th>
+      <th>{{'PAGES.Amount' | translate }}</th>
+      <th>{{'PAGES.Balance' | translate }}</th>
+    </tr>
+    <tr *ngFor="let ac of acStatement" >
+      <td style=" border-bottom: 1px solid black;">{{ac.DATED}}</td>
+      <td style=" border-bottom: 1px solid black;">{{ac.VOUCHER_NO}}</td>
+      <td style="text-align: right; border-bottom: 1px solid black;">
+        <div *ngIf="ac.DEBIT > 0" style="color:red">
+          {{ac.DEBIT | number : '1.2-2'}} 
+        </div> 
+        <div *ngIf="ac.CREDIT > 0" style="color:green">
+          {{ac.CREDIT | number : '1.2-2'}}
+        </div> 
+      </td>
+      <td  [ngStyle]="{'color':ac.BALANCE < 0 ? 'red' : 'green' }" style="text-align: right; border-bottom: 1px solid black;">{{ac.BALANCE |  negToPos | number : '1.2-2'}}</td>
+    </tr>
+    <!-- [ngClass]="{'setPerens' : isNegitive(ac.BALANCE)}" -->
+  </table>
+</div>
+  <ion-row>
+    <ion-col size="12">
+      <ion-spinner *ngIf="loading" name="bubbles"></ion-spinner>
+    </ion-col>
+  </ion-row>
+</ion-content>

@@ -1,0 +1,10 @@
+page-account {
+    setPerens {
+        :before {
+         content: '(';
+        }
+        :after {
+         content: ')';
+        }
+       }
+}

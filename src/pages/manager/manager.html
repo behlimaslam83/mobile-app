@@ -1,0 +1,303 @@
+
+<ion-header>
+  <ion-navbar color="dark">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-buttons end>
+      <img alt="logo" style="float: right;" height="25" src="assets/imgs/logoTr.png">
+    </ion-buttons>
+  </ion-navbar>
+  <ion-toolbar>
+    <ion-row>
+      <ion-col col-10>
+        <br>
+        <ion-title> 
+          <b>
+          {{'PAGES.ManageAccess' | translate }}
+        </b>
+      </ion-title>
+      </ion-col>
+      <ion-col col-2>
+        <button *ngIf="hideAccessForm && hideEditForm" ion-button icon-only  clear (click)="addUser('newUser',null)">
+          <ion-icon name="add"></ion-icon>
+         </button>
+         <button *ngIf="!hideAccessForm || !hideEditForm" color="danger" ion-button icon-only  clear (click)="addUser('close',null)">
+          <ion-icon name="close"></ion-icon>
+         </button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+  
+</ion-header>
+
+<ion-content padding>
+  <div style="margin-bottom: 20%;">
+    <!-- section 1 List users  -->
+    <div *ngIf="hideAccessForm && hideEditForm">
+
+      <ion-card *ngFor="let u of userList" >
+       
+        <ion-card-content>
+          
+          <h2>{{u.AMU_DESC}}</h2>
+          <p> <a style="text-decoration: none;" href="tel:{{u.AMU_CELL_PHONE}}"><ion-icon name="call"></ion-icon> {{u.AMU_CELL_PHONE}}</a>  </p>
+          <p><a style="text-decoration: none;" href="mailto:{{u.AMU_EMAIL}}" target="_blank"><ion-icon name="mail"></ion-icon> {{u.AMU_EMAIL}}</a> </p>
+        </ion-card-content>
+      
+        <ion-row>
+          <ion-col>
+            <button (click)="addUser('editUser',u.AMU_CODE)" color="primary" ion-button icon-start clear small>
+              <ion-icon name="cog"></ion-icon>
+              <div>Settings</div>
+            </button>
+          </ion-col>
+          <ion-col >
+            <button (click)="deleteUserAlert(u.AMU_DESC,u.AMU_CODE,u.AMU_CELL_PHONE)" color="danger" ion-button icon-start float-right clear small>
+              <ion-icon name="trash"></ion-icon>
+              <div> Delete</div>
+            </button>
+          </ion-col>
+        </ion-row>
+      
+      </ion-card>
+    </div>
+
+    <!-- Section 2  Create Users-->
+    <ion-segment *ngIf="!hideAccessForm" [(ngModel)]="segment" color="primary" >
+      <ion-segment-button value="user">
+       Create User
+      </ion-segment-button>
+      <ion-segment-button [disabled]="!menuListLov.length > 0" value="settings">
+        Settings
+      </ion-segment-button>
+    </ion-segment>
+    <ion-list  *ngIf="!hideAccessForm">
+    <form [formGroup]="accessForm" >
+        <!-- segment 1 -->
+      <div *ngIf="segment == 'user' ">
+         <!-- mobile -->        
+         <ion-label stacked >Mobile <span style="color: red;">*</span></ion-label>
+         <input type="tel"
+         ng2TelInput 
+         [readonly]='mobileReadOnly'
+         formControlName="mobile"
+         (hasError)="hasError($event)"
+         (intlTelInputObject)="telInputObject($event)"
+         (countryChange)="onCountryChange($event)"
+         (ng2TelOutput)="getNumber($event)"
+         [ng2TelInputOptions]="{initialCountry: 'ae',onlyCountries: ['ae','sa','eg','om','bh','qa','su','ca']}"
+         />
+         <ion-label color="danger" *ngIf="!accessForm.controls.mobile.valid && (accessForm.controls.mobile.dirty || submitAttempt)" >
+          Please enter valid mobile number
+        </ion-label>
+        <ion-item *ngIf='!mobileReadOnly' text-center>
+          <button  ion-button color="primary" type="button" (click)="sendOTP()" [disabled]="!accessForm.controls.mobile.valid" >
+            Get OTP
+          </button>
+        </ion-item>
+        
+        <!-- <ion-item *ngIf='!otpVerified'>
+          <ion-label stacked >OTP</ion-label>
+          <ion-input required formControlName="otp" type="tel" disabled="{{accessFormDisabled}}"></ion-input>
+        </ion-item> -->
+        <ion-row *ngIf='!otpVerified' >
+          <ion-col size="12" text-center>
+            <ion-label>Enter OTP</ion-label>
+            <ng-otp-input
+            #ngOtpInput
+              (onInputChange)="onOtpChange($event)"
+              [config]="config"
+              ></ng-otp-input>
+            </ion-col>
+          </ion-row>
+          <!-- <ion-item *ngIf='!otpVerified' text-center>
+            <button  ion-button color="primary" type="button" (click)="verifyOTP()" [disabled]="!accessForm.controls.otp.valid" >
+              Verify OTP
+            </button>
+          </ion-item> -->
+        
+
+      
+        <div *ngIf='mobileReadOnly'>
+          <!-- username -->
+          <ion-item>
+            <ion-label stacked >User Name <span style="color: red;">*</span></ion-label>
+            <ion-input required formControlName="userName" type="text" disabled="{{accessFormDisabled}}"></ion-input>
+          </ion-item>
+            <ion-label color="danger" *ngIf="!accessForm.controls.userName.valid && (accessForm.controls.userName.dirty || submitAttempt)" >
+              Please enter valid user name
+            </ion-label>
+  
+          <!-- email -->
+          <ion-item>
+            <ion-label stacked>E-Mail</ion-label>
+            <ion-input  formControlName="email" type="text" disabled="{{accessFormDisabled}}"></ion-input>
+          </ion-item>
+          <!-- <ion-label color="danger" *ngIf="!accessForm.controls.email.valid && (accessForm.controls.email.dirty || submitAttempt)" >
+            Please enter valid email
+          </ion-label> -->
+          
+          <ion-item>
+            <ion-label stacked>Password <span style="color: red;">*</span></ion-label>
+            <ion-input required formControlName="password" type="password" disabled="{{accessFormDisabled}}"></ion-input>
+          </ion-item>
+          <ion-label color="danger" *ngIf="!accessForm.controls.password.valid && (accessForm.controls.password.dirty || submitAttempt)" >
+            Please enter valid password
+          </ion-label>
+  
+          <ion-item>
+            <ion-label stacked >Retype Password <span style="color: red;">*</span></ion-label>
+            <ion-input required formControlName="rePassword" type="text" disabled="{{accessFormDisabled}}"></ion-input>
+          </ion-item>
+          <ion-label color="danger"  *ngIf="accessForm.errors?.mismatch && (accessForm.controls['rePassword'].dirty || accessForm.controls['rePassword'].touched)" >
+           Password not matched
+          </ion-label>
+          <button block ion-button color="primary" type="button" (click)="createUser()" [disabled]="accessForm.invalid" [hidden]="user_primary_id != null">
+            Create User
+          </button>
+        </div>
+      </div>
+        <!-- segment 2 -->
+      <div *ngIf="segment == 'settings' ">
+        <div *ngIf="menuListLov.length > 0">
+            <ion-list>
+              <ion-item >
+                <ion-label>Settings </ion-label>
+                <ion-label text-right>Yes/No</ion-label>
+              </ion-item>
+          <!-- MenuListLov -->
+          <ion-item *ngFor="let m of menuListLov">
+            <ion-label>{{m.MENU_DESC}}</ion-label>
+            <ion-toggle  [(ngModel)]="m.CHECKED" [ngModelOptions]="{standalone: true}" (ionChange)="checkToggle(m.MENU_CODE,m.CHECKED)" ></ion-toggle>
+          </ion-item>
+        </ion-list>
+        </div>
+      </div>
+    </form>
+    </ion-list>
+
+
+    <!-- Section 3 Edit Users-->
+    <ion-segment *ngIf="!hideEditForm" [(ngModel)]="editSegment" color="primary" >
+      <ion-segment-button value="user">
+       User Info
+      </ion-segment-button>
+      <ion-segment-button  value="settings">
+        Settings
+      </ion-segment-button>
+    </ion-segment>
+    <ion-list  *ngIf="!hideEditForm">
+      <form [formGroup]="editAccessForm">
+        <div *ngIf="editSegment == 'user' ">
+
+          <div *ngIf="!editMobileReadOnly">
+          <ion-label stacked >Old Mobile</ion-label>
+          <input type="text"  
+          ng2TelInput 
+          [readonly]='true'
+          formControlName="oldMobile"
+          (hasError)="hasError($event)"
+          (intlTelInputObject)="telInputObject($event)"
+          />
+          </div>
+
+          <ion-label stacked *ngIf="!editMobileReadOnly">New Mobile</ion-label>
+          <ion-label stacked *ngIf="editMobileReadOnly">Mobile</ion-label>
+          <input type="tel"  
+          #mobileInput
+          ng2TelInput 
+          [readonly]='editMobileReadOnly'
+          formControlName="mobile"
+          (hasError)="hasError($event)"
+          (intlTelInputObject)="telInputObject($event)"
+          (countryChange)="onCountryChange($event)"
+          (ng2TelOutput)="getNumber($event)"
+          [ng2TelInputOptions]="{initialCountry: 'ae',onlyCountries: ['ae','sa','eg','om','bh','qa','su','ca']}"
+          />
+          <ion-label color="danger" *ngIf="!editAccessForm.controls.mobile.valid && (editAccessForm.controls.mobile.dirty || submitAttempt)" >
+            Please enter valid mobile number
+          </ion-label>
+          <ion-item *ngIf="!activeEditOTP && otpEditVerified" text-center>
+            <button ion-button color="primary" type="button" (click)="changeUserMobile()" >
+              Change Number
+             </button>
+          </ion-item>
+         
+          <ion-item *ngIf="activeEditOTP" text-center>
+            <button ion-button color="primary" type="button" (click)="sendOTP()" [disabled]="!editAccessForm.controls.mobile.valid" >
+              Get OTP
+            </button>
+          </ion-item>
+          
+  
+          <!-- <ion-item *ngIf='!otpEditVerified'>
+            <ion-label stacked >OTP</ion-label>
+            <ion-input required formControlName="otp" type="tel" disabled="{{editAccessFormDisabled}}"></ion-input>
+          </ion-item> -->
+                  
+
+          <ion-row *ngIf='showEditOTPInput'>
+            <ion-col size="12" text-center>
+              <ion-label>Enter OTP</ion-label>
+              <ng-otp-input
+              #ngOtpInput
+                (onInputChange)="onEditOtpChange($event)"
+                
+                [config]="config"
+                ></ng-otp-input>
+              </ion-col>
+            </ion-row>
+
+          <!-- <button *ngIf='!otpEditVerified' block ion-button color="primary" type="button" (click)="verifyOTP()" [disabled]="!editAccessForm.controls.otp.valid" >
+            Verify OTP
+          </button> -->
+          <!-- username -->
+          <ion-item>
+            <ion-label stacked >User Name</ion-label>
+            <ion-input required formControlName="userName" type="text" ></ion-input>
+          </ion-item>
+            <ion-label color="danger" *ngIf="!editAccessForm.controls.userName.valid && (editAccessForm.controls.userName.dirty || submitAttempt) " >
+              Please enter valid user name
+            </ion-label>
+  
+          <!-- email -->
+          <ion-item>
+            <ion-label stacked>E-Mail</ion-label>
+            <ion-input  formControlName="email" type="text" ></ion-input>
+          </ion-item>
+          <!-- <ion-label color="danger" *ngIf="!editAccessForm.controls.email.valid && (editAccessForm.controls.email.dirty || submitAttempt)" >
+            Please enter valid email
+          </ion-label> -->
+          
+        
+           <button block ion-button color="primary" type="button" (click)="updateUser()" [disabled]="editAccessForm.invalid ||  disableUpdateButton " > <!-- ||  disableUpdateButton -->
+            Update
+          </button>
+          <!-- <button block ion-button color="secondary" type="button" (click)="addUser('close',null)"  >
+            Close
+          </button> -->
+        
+        </div>
+        <div *ngIf="editSegment == 'settings'">
+            <!-- MenuListLov -->
+            <ion-list>
+              <ion-item>
+                <ion-label>Settings </ion-label>
+                <ion-label text-right>Yes/No</ion-label>
+              </ion-item>
+              
+              <ion-item *ngFor="let m of menuListLov">
+                <ion-label>{{m.MENU_DESC}}</ion-label>
+                <ion-toggle  [(ngModel)]="m.CHECKED" [ngModelOptions]="{standalone: true}" (ionChange)="checkToggle(m.MENU_CODE,m.CHECKED)" ></ion-toggle>
+              </ion-item>
+            </ion-list>
+        </div>
+      </form>
+
+    </ion-list>
+
+    
+ </div>
+
+</ion-content>

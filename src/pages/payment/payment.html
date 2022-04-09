@@ -1,0 +1,111 @@
+<ion-header>
+  <ion-navbar color="dark">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-buttons end>
+  
+      <img alt="logo" style="float: right;" height="25" src="assets/imgs/logoTr.png">
+    </ion-buttons>
+  </ion-navbar>
+  <!-- <ion-toolbar>
+    <ion-title>{{'PAGES.Payment' | translate }}</ion-title>
+  </ion-toolbar> -->
+</ion-header>
+
+
+<ion-content>
+<div style="margin-bottom: 20%;">
+
+  <ion-row>
+    <ion-col style="margin: auto;text-align: center;font-weight:bold;font-size: large;" size="12">
+      <ion-label>Payment Portal</ion-label>
+    </ion-col>
+  </ion-row>
+
+  <div padding>
+    <ion-segment [(ngModel)]="paymentType">
+      <ion-segment-button [disabled]="disableAdvancePay" value="advance">
+        Advance Payment
+      </ion-segment-button>
+      <ion-segment-button value="invoice">
+        Pay against Invoice
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+  
+  
+<div [ngSwitch]="paymentType">
+  <div *ngSwitchCase="'advance'">
+  <!-- Advance Payment Option -->
+  <ion-row >
+    <ion-col style="text-align: center;" size="12" >
+      <p> <span><b>Step 1</b></span> Enter the amount you wish to pay in advance</p>
+      <ion-input type="number" [(ngModel)]="amount"  color="light" (input)="amountChecker($event.target.value)" placeholder="Amount"></ion-input>  
+    </ion-col>
+  </ion-row>
+  <ion-row >
+    <ion-col size="12">
+      <button ion-button block color="dark" [disabled]="(amount == null) || amount == 0" (click)="goToPaymentSelection('ADVANCE_PAYMENT')">NEXT</button>
+    </ion-col>
+   </ion-row>
+</div>
+  
+<div *ngSwitchCase="'invoice'">
+  <!-- Online Payment -->
+  <!-- Step 1 -->
+<ion-row>
+  <ion-col style="text-align: center;" size="12" >
+    <p> <span><b>Step 1</b></span> Enter invoice number you wish to pay</p>
+    <ion-input type="number" [(ngModel)]="invoice_no" color="light" placeholder="Invoice No"></ion-input>  
+  </ion-col>
+</ion-row>
+ <ion-row >
+  <ion-col size="12">
+    <ion-spinner *ngIf="loading" name="bubbles"></ion-spinner>
+    <button *ngIf="invoiceData.length == 0" ion-button block color="dark" (click)="getInvoiceDetails()">NEXT</button>
+    <button *ngIf="invoiceData.length > 0" [disabled]="loading" ion-button block color="dark" (click)="getInvoiceDetails()">Add More Invoice</button>
+  </ion-col>
+ </ion-row>
+ <ion-row style="padding-top: 10px;" *ngIf="invoiceData.length > 0">
+   <ion-col size="12">
+      <table>
+        <tr style="background-color: rgb(99, 99, 99); color: white;">
+          <th>Date</th>
+          <!-- <th>Name</th> -->
+          <th>Invoice No</th>
+          <th>Amount </th>
+        </tr>
+        <tr *ngFor="let i of invoiceData">
+          <td>{{i.IH_TXN_DT}}</td>
+          <!-- <td>{{i.IH_CUST_AC_DESC}}</td> -->
+          <td>{{i.IH_TXN_NO}}</td>
+          <td class="num" >{{i.IH_NET_VALUE | number : '1.2-2'}}</td>          
+        </tr>
+        <tr>
+          <td></td>
+          <td><b> Total</b></td>
+          <td class="num">{{totalAmount | number : '1.2-2'}}</td>
+        </tr>
+      </table>
+   </ion-col>
+ </ion-row>
+<!-- Step 2  (input)="amountChecker($event.target.value)" -->
+ <ion-row *ngIf="invoiceData.length > 0">
+  <ion-col style="text-align: center;" size="12" >
+    <p> <span><b>Step 2</b></span> Enter the amount you wish to pay</p>
+    <ion-input type="number" 
+    [(ngModel)]="amount"
+    (input)="amountChecker($event.target.value)"
+    color="light" placeholder="Amount"></ion-input>  
+  </ion-col>
+</ion-row>
+<ion-row *ngIf="invoiceData.length > 0">
+  <ion-col size="12">
+    <button ion-button block color="dark" (click)="goToPaymentSelection('INVOICE')">PAYMENT SELECTION</button>
+  </ion-col>
+ </ion-row>
+</div>
+</div>
+</div>
+</ion-content>

@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-navbar color="dark">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-buttons end>
+      <img alt="logo" style="float: right;" height="25" src="assets/imgs/logoTr.png">
+    </ion-buttons>
+  </ion-navbar>
+  <ion-toolbar>
+    <ion-title> 
+      <b>
+      {{'PAGES.Credit Limit' | translate }}
+    </b>
+  </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="page">
+  <div>
+    <canvas #doughnutCanvas></canvas>
+  </div>
+  <ion-row>
+    <ion-col size="12">
+      <ion-spinner *ngIf="loading" name="bubbles"></ion-spinner>
+    </ion-col>
+  </ion-row>
+  <!-- <table *ngIf="!loading">
+    <tr>
+      <th>
+        <h2>
+          {{'PAGES.Credit Limit' | translate }}
+        </h2>
+        </th>
+        <td style="text-align: right">
+          <h2>
+            {{creditLimit | number : '1.2-2'}}
+          </h2>
+        </td>
+    </tr>
+    <tr>
+      <th>{{'PAGES.Consumed' | translate }}</th>
+      <td style="text-align: right">{{creditUtilized | number : '1.2-2'}}</td>
+    </tr>
+    <tr>
+      <th>{{'PAGES.Balance' | translate }}</th>
+      <td style="text-align: right">{{total | number : '1.2-2'}}</td>
+    </tr>
+  </table> -->
+
+  <ion-item>
+    <ion-label>{{'PAGES.Credit Limit' | translate }}</ion-label>
+    <ion-label>{{creditLimit | number : '1.2-2'}}</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>{{'PAGES.Consumed' | translate }}</ion-label>
+    <ion-label>{{creditUtilized | number : '1.2-2'}}</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>{{'PAGES.Balance' | translate }}</ion-label>
+    <ion-label>{{total | number : '1.2-2'}}</ion-label>
+  </ion-item>
+
+</ion-content>

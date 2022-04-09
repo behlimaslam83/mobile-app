@@ -1,0 +1,198 @@
+<ion-header>
+
+  <ion-navbar color="dark">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-buttons end>
+      <img alt="logo" style="float: right;" height="25" src="assets/imgs/logoTr.png">
+    </ion-buttons>
+  </ion-navbar>
+  <!-- <ion-toolbar>
+    <ion-title>
+     <b>
+       {{'PAGES.Stock Check' | translate }}
+     </b>
+    </ion-title>
+  </ion-toolbar> -->
+</ion-header>
+
+
+<ion-content  no-padding>
+<div style="height: 160%">
+  <ion-row>
+    <ion-col size="12">
+      <ion-item>
+        <ion-label>Product</ion-label>
+        <ion-select interface="popover" [selectOptions]="{'cssClass': 'wider-popover'}" [(ngModel)]="product"  (ionChange)="selectProduct()">
+          <ion-option *ngFor="let p of productList" value={{p.ECI_DESC}}> {{p.ECI_DESC}} </ion-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <!-- <ion-row>
+    <input type="text" placeholder="All Products" 
+    class="productsList" 
+    [(ngModel)]="product"
+    (change)="selectProduct()"
+     list="productsList" name="productsList"> 
+    <datalist id="productsList">
+      <option *ngFor="let p of productList" value={{p.ECI_DESC}} >
+    </datalist> 
+  </ion-row> -->
+  <ion-row>  
+    <ion-col size="8">
+      <ion-row>
+        <ion-col no-padding>
+          <p style=" margin-left:4px;">
+            <b>
+              {{'PAGES.Stock Check' | translate }}
+            </b>
+          </p>
+        <p style=" margin-left: 4px;">
+          {{'PAGES.Ers' | translate }}
+        </p>
+        </ion-col>
+      </ion-row>
+      <ion-row >
+        <ion-col (click)="presentSearchModal()">
+          <ion-item>
+            <ion-label stacked>{{'PAGES.Color' | translate }}</ion-label>
+            <ion-input type="text"  disabled="true" text-uppercase  [(ngModel)]="newItemID"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <!-- segment selection -->
+      <ion-row>
+        <ion-col>
+          <ion-segment [(ngModel)]="sqmSegment" color="primary" (ionChange)="segmentChanged($event)">
+            <ion-segment-button value="sqm">
+              {{qtyLabel}}
+            </ion-segment-button>
+            <ion-segment-button value="qty">
+              W - H
+            </ion-segment-button>
+          </ion-segment>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="sqmSegment == 'sqm'">
+        <ion-col>
+          <ion-item>
+            <ion-label stacked>Quantity</ion-label>
+            <ion-input type="number" (input)='onInputData($event.target.value , "sqmQty")' [(ngModel)]="sqmQty"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <div *ngIf="sqmSegment == 'qty'">
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label stacked>{{'PAGES.Width' | translate }}</ion-label>
+            <ion-input type="number" [(ngModel)]="width" (input)='onInputData($event.target.value , "width")'></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label stacked >{{'PAGES.Height' | translate }}</ion-label>
+            <ion-input type="number" [(ngModel)]="height" (input)='onInputData($event.target.value , "height")'></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label stacked>{{'PAGES.NumberOfPiece' | translate }}</ion-label>
+            <ion-input type="number" [(ngModel)]="qty" (input)='onInputData($event.target.value , "qty")'></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+     </div>
+    </ion-col>
+    <ion-col size="4" class="col1">
+      <img *ngIf="imgPath!= null" src="{{imgPath}}" class="center-image"  />
+      <!-- <img *ngIf="imgPath == null" src="assets/imgs/noImage.jpg" class="center-image"  /> -->
+    </ion-col>
+  </ion-row>
+
+  
+  <!-- loader -->
+  <ion-row>
+    <ion-col size="12">
+      <ion-spinner *ngIf="loading" name="bubbles"></ion-spinner>
+    </ion-col>
+  </ion-row>
+
+  <!-- Buttons -->
+  <ion-row>
+    <ion-col col-6>
+      <button ion-button [disabled]="( qty == null || height == null  || width == null ) && sqmQty == null || newItemID == null" block color="dark" (click)="onAdd()">{{'PAGES.Add' | translate }}</button>
+    </ion-col>
+    <ion-col col-6>
+      <button *ngIf="stockcheckList.length > 0" ion-button  block color="dark" (click)="stockCheck()">{{'PAGES.Stock Check' | translate }}</button>
+    </ion-col>
+    <ion-col  col-6>
+      <button *ngIf="stockcheckList.length > 0" ion-button  block color="dark" (click)="clear()">{{'PAGES.Clear' | translate }}</button>
+    </ion-col>
+    <ion-col  col-6>
+      <button *ngIf="stockcheckList.length > 0" ion-button  block color="dark" (click)="SendEnquiry()">{{'PAGES.Send Enquiry' | translate }}</button>
+    </ion-col>
+  </ion-row>
+  <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+  
+    
+  
+   <!-- Input Array -->
+   <table *ngIf="stockcheckList.length > 0 ">
+    <tr style="background-color: black;color: white;">
+      <th>{{'PAGES.Width' | translate }}</th>
+      <th>{{'PAGES.Height' | translate }}</th>
+      <th>{{'PAGES.NumberOfPiece' | translate }}</th>
+      <th>QTY</th>
+      <th>{{'PAGES.Color' | translate }}</th>
+      <th *ngIf="stockcheckList[0].status != null">{{'PAGES.Status' | translate }}</th>
+    </tr>
+    <tr *ngFor="let s of stockcheckList ">
+      <td>{{s.width}}</td>
+      <td>{{s.height}}</td>
+      <td>{{s.qty}}</td>
+      <td>{{s.sqmQty}}</td>
+      <td (click)="showProduct(s.newItemID,s.productDesc,s.status)">{{s.newItemID}}</td>
+      <td *ngIf="s.status != null"
+       [ngStyle]="{'color':s.status == ' Available ' ? 'green' : 'rgb(238, 113, 29)' }"
+       (click)="showProduct(s.newItemID,s.productDesc,s.status)">
+        <ion-icon *ngIf="s.status == ' Available '" name="checkbox"></ion-icon>
+        <ion-icon *ngIf="s.status != ' Available '" name="custom-triangle"></ion-icon>
+
+      </td>
+    </tr>
+    <tr *ngIf="stockcheckList[0].status != null">
+      <td colspan="6">
+        <p>Hint:</p>
+        <p>
+          <ion-icon name="checkbox" style="color: green;"></ion-icon> Available
+        </p>
+        <p>
+          <ion-icon name="custom-triangle" style="color: rgb(238, 113, 29);"></ion-icon> Contact Sales Consultant
+        </p>
+      </td>
+    </tr>
+  </table>
+  <!-- Result Array -->
+<table>
+  <!-- <div  *ngFor="let i of resultArray" style="background-color: white;text-align: right;">
+    <tr >
+      <th size="6">{{'PAGES.Status' | translate }}</th> 
+      <td size="6" style="width: 100%;text-align: right;" [ngStyle]="{'color':i.status.length > 15 ? 'red' : 'green' }">{{i.status}}</td>
+    </tr>
+          <tr>
+            <th size="6">Product</th>
+            <td size="6" style="width: 100%;text-align: right;">{{i.product}}</td>
+          </tr>
+</div> -->
+</table>
+</div>
+</ion-content>

@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-navbar color="dark">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    
+    <ion-buttons end>
+      <img alt="logo" style="float: right;" height="25" src="assets/imgs/logoTr.png">
+    </ion-buttons>
+  </ion-navbar>
+ 
+</ion-header>
+
+
+<ion-content class="card-background-page">
+  <!-- <ion-card *ngFor="let p of productList">
+    <img src={{p.ECI_IMAGE_PATH}}/>
+    <div class="card-title">{{p.ECI_DESC}}</div>
+   
+  </ion-card> -->
+  <div style="margin-bottom: 20%;">
+    <div *ngIf="imagesPath.length==0">
+    <ion-card  *ngFor="let p of productList" (click)="getProductImages(p.ECI_CODE)">
+      <img src={{p.ECI_IMAGE_PATH}}/>
+      <ion-card-content>
+        <ion-card-title>
+         <ion-row >
+           <ion-col col-9 >
+           {{p.ECI_DESC}}  
+           </ion-col>
+           <ion-col col-3>
+            <button ion-button  expand="block" fill="clear" shape="round">
+              Gallery
+            </button>
+           </ion-col>
+         </ion-row>
+        </ion-card-title>
+      </ion-card-content>
+    </ion-card>
+  </div>
+    <div *ngIf="imagesPath.length>0">
+    <ion-slides pager>
+      <ion-slide *ngFor="let p of imagesPath">
+        <ion-card  >
+          <img src={{p.ECG_IMAGE_PATH}}/>
+          <ion-card-content>
+            <ion-card-title>
+              {{p.ECI_DESC}}
+            </ion-card-title>
+          </ion-card-content>
+        </ion-card>
+      </ion-slide>
+    </ion-slides>
+    <ion-row>
+      <ion-col size="12">
+        <button offset-4 ion-button (click)="backToProducts()"> Back To Products</button>
+      </ion-col>
+    </ion-row>
+  </div>
+  </div>
+</ion-content>

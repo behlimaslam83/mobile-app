@@ -1,0 +1,104 @@
+<ion-header>
+  <ion-navbar color="dark">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+
+    <ion-title >
+      <!-- <strong>Home</strong> -->
+      {{branch}}
+    </ion-title>
+        <ion-buttons end>
+          <img alt="logo" *ngIf="language == 'ar'" class="sedarLogo" height="25" src="assets/imgs/logoae.png">
+          <img alt="logo" *ngIf="language != 'ar'" class="sedarLogo"  height="25" src="assets/imgs/logoTr.png">
+        </ion-buttons>
+
+  </ion-navbar>
+</ion-header>
+
+<ion-content no-padding class="eventForm ">
+  <!-- <ion-col *ngIf="loading" size="12" no-padding>
+    <ion-spinner   name="bubbles" ></ion-spinner>
+  </ion-col> -->
+  <div class="animated fadeInDown">
+  <ion-row  no-padding >
+    <ion-col size="12" style="padding: 0px;" no-padding>
+      <img style="width: fit-content;" src="https://bkt.sedarglobal.com/sedarglobal.com/item/gallery/1152755/Fujikawa-CS_landing-page_revised-1920x968.jpg">
+    </ion-col>
+  </ion-row>
+  
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngIf="!disableOrders" col-4>
+        <div  class="col col-50 " (click)="goToOrders()">
+          <div class="tabtext ">
+            <!-- <img src="../../assets/imgs/orders.png" style="width:30px;height:30px; "> -->
+            <ion-icon slot="start" name="custom-orders"></ion-icon>
+            <!-- <ion-badge item-end></ion-badge> -->
+           <p>{{'PAGES.Orders' | translate }}</p>
+          </div>
+        </div>
+      </ion-col>
+      <ion-col *ngIf="!disableStockCheck" col-4>
+        <div  class="col col-50 " (click)="goToStock()">
+          <div class="tabtext">
+            <!-- <img src="../../assets/imgs/stockCheck.png" style="width:30px;height:30px;"> -->
+            <!-- <ion-badge item-end></ion-badge> -->
+            <ion-icon slot="start" name="custom-stock"></ion-icon>
+            <p> {{'PAGES.Stock Check' | translate }}</p>
+          </div>
+        </div>
+      </ion-col>
+      <ion-col *ngIf="!disableCreditLimit" col-4>
+        <div  class="col col-50 " (click)="goToCredit()">
+          <div class="tabtext ">
+            <!-- <img src="../../assets/imgs/creditLimit.png" style="width:30px;height:30px; "> -->
+            <!-- <ion-badge item-end></ion-badge> -->
+            <ion-icon slot="start" name="custom-credit"></ion-icon>
+            <p>{{'PAGES.Credit Limit' | translate }}</p>
+          </div>
+        </div>
+      </ion-col>
+
+      <ion-col *ngIf="!disableAccounts" col-4>
+        <div  class="col col-50 " (click)="goToAccount()">
+          <div class="tabtext">
+            <ion-icon slot="start" name="custom-account"></ion-icon>
+            <p>{{'PAGES.Account' | translate }}</p>
+          </div>
+        </div>
+      </ion-col>
+      <ion-col *ngIf="!disableOutstanding" col-4>
+        <div  class="col col-50 " (click)="goToPendingBills()">
+          <div class="tabtext ">
+            <ion-icon slot="start" name="custom-outstanding"></ion-icon>
+            <p> {{'PAGES.Outstanding Bills' | translate }}</p>
+          </div>
+        </div>
+      </ion-col>
+      <ion-col *ngIf="!disablePayment" col-4>
+        <div  class="col col-50 " (click)="goToPayment()">
+          <div class="tabtext">
+            <ion-icon slot="start" name="custom-payment"></ion-icon>
+            <p> {{'PAGES.Make Payment' | translate }}</p>
+          </div>
+        </div>
+      </ion-col>
+
+      <ion-col *ngIf="!disableGallery" col-4>
+        <div  class="col col-50 " (click)="goToProductList()">
+          <div class="tabtext ">
+            <ion-icon slot="start" name="image"></ion-icon>
+            <p> {{'PAGES.Gallery' | translate }}</p>
+          </div>
+        </div>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+
+</div>
+  <div class="art-div">
+    <img src="assets/imgs/art.png"  alt="">
+  </div>
+</ion-content>

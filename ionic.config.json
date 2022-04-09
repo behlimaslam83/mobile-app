@@ -1,0 +1,7 @@
+{
+  "name": "SedarGlobal",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}
